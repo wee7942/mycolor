@@ -1,0 +1,2368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘 마음의 색깔은? | Wee Class 마음 정원</title>
+  <!-- Google Fonts: Gowun Dodum & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #fffaf3;
+      --bg-warm: #fdf3e7;
+      --card-bg: #ffffff;
+      --text-main: #3d332c;
+      --text-sub: #7a6c61;
+      --text-muted: #a6988d;
+      --border-warm: #f0e2d3;
+      --accent-main: #ff7e5f;
+      --accent-soft: #ffefe8;
+      --shadow-soft: 0 10px 30px rgba(105, 76, 55, 0.07);
+      --shadow-hover: 0 14px 36px rgba(105, 76, 55, 0.13);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --selected-theme: #eab308;
+      --selected-theme-soft: #fefce8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, var(--bg-cream) 0%, var(--bg-warm) 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .hero-subtitle, .prescription-quote {
+      font-family: 'Gowun Dodum', 'Noto Sans KR', sans-serif;
+    }
+
+    .bg-decor {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+
+    .bg-decor-1 {
+      width: 420px;
+      height: 420px;
+      background: #ffe0cc;
+      top: -120px;
+      left: -100px;
+    }
+
+    .bg-decor-2 {
+      width: 460px;
+      height: 460px;
+      background: #fff0b8;
+      bottom: -150px;
+      right: -120px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 250, 243, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-warm);
+      padding: 12px 0;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand-badge {
+      background: #fff2e2;
+      color: #b85d38;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid #f5d8bd;
+      cursor: pointer;
+    }
+
+    .connection-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      background: #fff;
+      padding: 4px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border-warm);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+    }
+
+    .status-dot.online {
+      background: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-outline-sm, .btn-icon-sm {
+      background: #ffffff;
+      border: 1px solid #e7d4c2;
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline-sm:hover, .btn-icon-sm:hover {
+      background: #fff3e6;
+      border-color: #d9b89c;
+      transform: translateY(-1px);
+    }
+
+    .page-view {
+      animation: pageFadeIn 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes pageFadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-section {
+      padding: 44px 0 32px;
+      text-align: center;
+    }
+
+    .hero-subtitle {
+      display: inline-block;
+      color: #c2643f;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      background: #fff2e6;
+      padding: 4px 16px;
+      border-radius: 999px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.1rem, 5vw, 3.1rem);
+      color: #382b22;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-desc {
+      color: var(--text-sub);
+      font-size: 1.02rem;
+      max-width: 650px;
+      margin: 0 auto 32px;
+      word-break: keep-all;
+    }
+
+    .color-selection-box {
+      background: rgba(255, 255, 255, 0.82);
+      border: 2px solid #f3e4d4;
+      border-radius: var(--radius-lg);
+      padding: 32px 26px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .section-step-badge {
+      display: inline-block;
+      background: #4a3b31;
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 7px 18px;
+      border-radius: 999px;
+      margin-bottom: 24px;
+    }
+
+    .heart-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 850px) {
+      .heart-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .heart-grid { grid-template-columns: 1fr; }
+    }
+
+    .heart-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #ffffff;
+      border: 2px solid #f0e4d8;
+      border-radius: 20px;
+      padding: 16px 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .heart-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--card-accent, #ffb4a2);
+      background: var(--card-soft-bg, #fff7f2);
+    }
+
+    .heart-svg-wrap {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      background: var(--card-soft-bg, #fff7f2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+
+    .heart-card:hover .heart-svg-wrap {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+    .heart-svg {
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    }
+
+    .heart-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .heart-color-name {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    .heart-color-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .heart-go-arrow {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--card-accent, #ff6b6b);
+      color: #fff;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+      opacity: 0.9;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .heart-card:hover .heart-go-arrow {
+      opacity: 1;
+      transform: translateX(2px);
+    }
+
+    .heart-emotions-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .mini-emotion-tag {
+      font-size: 0.78rem;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #57493f;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .record-page-section {
+      padding: 28px 0 60px;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .record-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .btn-back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1.5px solid #e4d3c1;
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
+    }
+
+    .btn-back-home:hover {
+      background: #fff5eb;
+      border-color: #d2b497;
+      transform: translateX(-3px);
+    }
+
+    .btn-random-prescription {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #fff6eb 0%, #ffe8d1 100%);
+      border: 1.5px solid #f3c69f;
+      color: #b54d28;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(181, 77, 40, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .btn-random-prescription:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(181, 77, 40, 0.18);
+      background: #ffe8d1;
+    }
+
+    .upload-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 34px;
+      box-shadow: var(--shadow-soft);
+      border: 3px solid var(--selected-theme, #f0e2d3);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .upload-card-header {
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px dashed #e6d7c8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .selected-color-indicator {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .indicator-heart {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: var(--selected-theme-soft, #fff5eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.1rem;
+      flex-shrink: 0;
+    }
+
+    .step-label {
+      display: inline-block;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #b85d38;
+      margin-bottom: 2px;
+    }
+
+    .upload-title {
+      font-size: 1.55rem;
+      color: var(--text-main);
+    }
+
+    .mind-form {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .form-row { grid-template-columns: 1fr; }
+      .upload-card { padding: 22px 18px; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-weight: 700;
+      font-size: 0.96rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .label-sub {
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: var(--text-sub);
+    }
+
+    .emotion-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .emotion-chip-btn {
+      background: #fdf8f3;
+      border: 1.5px solid #e6d6c6;
+      color: #4f4137;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .emotion-chip-btn:hover {
+      background: var(--selected-theme-soft);
+      border-color: var(--selected-theme);
+    }
+
+    .emotion-chip-btn.selected {
+      background: var(--selected-theme);
+      border-color: var(--selected-theme);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid #e4d5c7;
+      background: #fffcf9;
+      font-family: inherit;
+      font-size: 0.96rem;
+      color: var(--text-main);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--selected-theme, #ff7e5f);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px var(--selected-theme-soft, rgba(255, 126, 95, 0.15));
+    }
+
+    .mt-2 { margin-top: 4px; }
+
+    .photo-upload-area {
+      border: 2px dashed #dcc8b6;
+      background: var(--selected-theme-soft, #fffaf5);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .photo-upload-area:hover {
+      border-color: var(--selected-theme, #ff7e5f);
+    }
+
+    .hidden-file-input { display: none; }
+
+    .camera-icon-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #ffffff;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.9rem;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .photo-guide-main {
+      font-weight: 700;
+      font-size: 1.02rem;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .photo-guide-sub {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 14px;
+    }
+
+    .photo-action-btns {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary-sm {
+      background: #ffffff;
+      border: 1.5px solid #decab8;
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary-sm:hover {
+      border-color: var(--selected-theme);
+      background: #fff;
+      transform: translateY(-1px);
+    }
+
+    .photo-preview-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #photoPreviewImg {
+      max-height: 300px;
+      max-width: 100%;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-change-photo {
+      background: rgba(61, 51, 44, 0.85);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+      color: #ffffff;
+      border: none;
+      padding: 16px 24px;
+      border-radius: var(--radius-md);
+      font-size: 1.08rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255, 126, 95, 0.3);
+      transition: all 0.25s ease;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(255, 126, 95, 0.4);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .gallery-section {
+      padding: 16px 0 60px;
+    }
+
+    .gallery-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .section-badge {
+      display: inline-block;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #c2643f;
+      margin-bottom: 4px;
+    }
+
+    .gallery-title { font-size: 1.85rem; }
+    .gallery-subtitle { color: var(--text-sub); font-size: 0.94rem; }
+
+    .gallery-stats {
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border-warm);
+      font-size: 0.9rem;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .filter-btn {
+      background: #ffffff;
+      border: 1.5px solid #e9d9c9;
+      color: var(--text-main);
+      padding: 8px 15px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover { background: #fff4e8; }
+
+    .filter-btn.active {
+      background: #3d332c;
+      color: #ffffff;
+      border-color: #3d332c;
+    }
+
+    .feed-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    @media (max-width: 920px) {
+      .feed-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 580px) {
+      .feed-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .bg-decor { display: none; }
+      .site-header { backdrop-filter: none; background: rgba(255, 250, 243, 0.98); }
+      .feed-color-badge { backdrop-filter: none; background: rgba(255, 255, 255, 0.96); }
+      .modal-backdrop { backdrop-filter: none; background: rgba(45, 34, 26, 0.68); }
+      .form-input, .form-textarea { font-size: 16px; }
+      .heart-card { padding: 15px 14px; }
+    }
+
+    .feed-card {
+      background: #ffffff;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1.5px solid #f0e2d3;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      content-visibility: auto;
+      contain-intrinsic-size: 360px;
+    }
+
+    .load-more-wrap {
+      text-align: center;
+      margin-top: 28px;
+    }
+
+    .btn-load-more {
+      background: #ffffff;
+      border: 2px solid #e7d4c2;
+      color: var(--text-main);
+      padding: 12px 28px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.2s ease;
+    }
+
+    .btn-load-more:hover {
+      background: #fff3e6;
+      border-color: #d9b89c;
+      transform: translateY(-2px);
+    }
+
+    .feed-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .feed-photo-box {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background: #f8f1ea;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .feed-photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+    }
+
+    .feed-card:hover .feed-photo-box img { transform: scale(1.04); }
+
+    .feed-color-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .feed-emotion-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+    }
+
+    .feed-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .feed-author-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .feed-author {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .feed-student-id {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      background: #f9f1e8;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-right: 6px;
+    }
+
+    .feed-date { font-size: 0.76rem; color: var(--text-muted); }
+
+    .feed-story {
+      font-size: 0.93rem;
+      color: #4f4239;
+      line-height: 1.55;
+      margin-bottom: 16px;
+      flex: 1;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .feed-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid #f4ebe1;
+    }
+
+    .btn-cheer {
+      background: #fff5f0;
+      border: 1px solid #ffd8c7;
+      color: #d95b38;
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-cheer:hover { background: #ffe6dc; transform: scale(1.04); }
+
+    .btn-delete-post {
+      background: transparent;
+      border: 1px solid #e7d8c9;
+      color: var(--text-muted);
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      cursor: pointer;
+    }
+
+    .btn-delete-post:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    .empty-feed {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius-lg);
+      border: 2px dashed #e6d5c3;
+      color: var(--text-sub);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(45, 34, 26, 0.58);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 200;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .hidden { display: none !important; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 26px;
+      max-width: 540px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+      position: relative;
+      animation: popUp 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    @keyframes popUp {
+      from { transform: translateY(20px) scale(0.96); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .prescription-card {
+      background: #fffdf9;
+      border: 2px solid #f3e2ce;
+    }
+
+    .prescription-ribbon {
+      height: 10px;
+      background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    }
+
+    .prescription-header {
+      text-align: center;
+      padding: 26px 24px 14px;
+    }
+
+    .prescription-tag {
+      display: inline-block;
+      background: #fff0e0;
+      color: #c8643b;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .prescription-title { font-size: 1.6rem; color: #382b22; margin-bottom: 4px; }
+    .prescription-recipient { font-size: 0.9rem; color: var(--text-sub); }
+
+    .prescription-body {
+      padding: 10px 26px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .prescription-color-pill {
+      align-self: center;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: #fff2eb;
+      color: #b84b29;
+    }
+
+    .prescription-quote-box {
+      background: #fff8ee;
+      border: 1.5px solid #f2dec6;
+      border-radius: 18px;
+      padding: 20px 22px;
+      text-align: center;
+      position: relative;
+    }
+
+    .quote-mark {
+      font-family: Georgia, serif;
+      font-size: 2.5rem;
+      line-height: 1;
+      color: #e4b68c;
+      margin-bottom: -8px;
+    }
+
+    .prescription-quote {
+      font-size: 1.13rem;
+      color: #3d3027;
+      line-height: 1.65;
+      margin-bottom: 8px;
+      word-break: keep-all;
+    }
+
+    .prescription-author { font-size: 0.84rem; color: var(--text-sub); }
+
+    .prescription-guide-box {
+      background: #f4faf6;
+      border: 1.5px solid #cde7d6;
+      border-radius: 18px;
+      padding: 18px 20px;
+    }
+
+    .guide-box-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #2f7a4f;
+      margin-bottom: 6px;
+    }
+
+    .guide-method-name { font-size: 1.05rem; color: #1f4f34; margin-bottom: 6px; }
+    .guide-method-desc { font-size: 0.92rem; color: #375a45; line-height: 1.55; word-break: keep-all; }
+
+    .prescription-footer {
+      padding: 16px 26px 24px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary, .btn-secondary {
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary { background: #ff7e5f; color: #ffffff; }
+    .btn-primary:hover { background: #f06746; }
+    .btn-secondary { background: #f3e8dd; color: #4f4137; }
+    .btn-secondary:hover { background: #e7d8c8; }
+
+    .admin-card { padding: 24px; }
+    .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .btn-close { background: #f5ece2; border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1rem; }
+    .admin-desc { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 14px; }
+    .admin-pin-row { display: flex; gap: 10px; }
+    .admin-error { color: #dc2626; font-size: 0.85rem; margin-top: 8px; }
+    .admin-status-banner { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 12px 14px; border-radius: 12px; font-size: 0.88rem; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .divider { border: none; border-top: 1px solid #eee0d2; margin: 18px 0; }
+    .admin-subtitle { margin-bottom: 6px; }
+    .code-textarea { font-family: Consolas, Monaco, monospace; font-size: 0.83rem; background: #282421; color: #f8f1e9; margin-bottom: 14px; }
+    .admin-config-actions { display: flex; justify-content: flex-end; gap: 10px; }
+    .detail-card { max-width: 620px; padding: 0; overflow: hidden; }
+    .detail-close { position: absolute; top: 14px; right: 14px; z-index: 10; background: rgba(255, 255, 255, 0.9); }
+    .detail-img { width: 100%; max-height: 440px; object-fit: contain; background: #241e1a; display: block; }
+    .detail-info { padding: 22px 24px; }
+    .site-footer { background: #f7eadb; border-top: 1px solid #ebd8c4; padding: 28px 0; text-align: center; color: var(--text-sub); font-size: 0.92rem; }
+    .footer-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: rgba(56, 43, 34, 0.94); color: #fff; padding: 12px 22px; border-radius: 999px; font-size: 0.92rem; font-weight: 600; z-index: 300; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); }
+  </style>
+</head>
+<body>
+  <div class="bg-decor bg-decor-1"></div>
+  <div class="bg-decor bg-decor-2"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-badge" id="homeBrandBadge" title="첫 화면으로 이동">🌿 Wee Class 따뜻한 마음 정원</span>
+        <div class="connection-status" id="connectionStatus" title="파이어베이스 연동 상태">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">모두에게 공유되는 마음 정원</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn-icon-sm" id="openAdminModalBtn" title="선생님 관리 / 파이어베이스 설정">
+          ⚙️ 선생님 설정
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <!-- [페이지 1] 첫 화면: 오늘 마음의 색깔은? -->
+    <div id="pageStep1" class="page-view">
+      <section class="hero-section">
+        <div class="hero-title-wrap">
+          <p class="hero-subtitle">잠시 숨을 고르고, 내 마음을 들여다보는 시간</p>
+          <h1 class="hero-title">오늘 마음의 색깔은 ?</h1>
+          <p class="hero-desc">
+            지금 내 마음과 가장 닮은 <strong>하트 색깔</strong>을 골라보세요.<br />
+            색깔 하트를 누르면 내 마음을 기록하고 처방전을 받는 페이지로 이동해요.
+          </p>
+        </div>
+
+        <div class="color-selection-box">
+          <div class="section-step-badge">내 마음의 색깔 하트를 선택해 주세요</div>
+          <div class="heart-grid" id="heartGrid"></div>
+        </div>
+      </section>
+
+      <section class="gallery-section" id="gallerySection">
+        <div class="gallery-header">
+          <div>
+            <span class="section-badge">🌈 우리들의 마음 풍경</span>
+            <h2 class="gallery-title">함께 나누는 마음의 색깔들</h2>
+            <p class="gallery-subtitle">친구들의 마음에 따뜻한 공감(하트)을 눌러주세요</p>
+          </div>
+          <div class="gallery-stats" id="galleryStats">
+            총 <strong id="totalCount">0</strong>개의 마음이 모였어요
+          </div>
+        </div>
+
+        <div class="filter-bar" id="filterBar"></div>
+        <div class="feed-grid" id="feedGrid"></div>
+        <div class="load-more-wrap hidden" id="loadMoreWrap">
+          <button type="button" class="btn-load-more" id="loadMoreBtn">
+            🌱 친구들의 마음 더 보기
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- [페이지 2] 두 번째 화면: 나의 마음 기록하기 & 랜덤 처방전 뽑기 -->
+    <div id="pageStep2" class="page-view hidden">
+      <section class="record-page-section">
+        <div class="record-top-bar">
+          <button type="button" class="btn-back-home" id="backToStep1Btn">
+            ← 다른 색깔 고르기 (첫 화면으로)
+          </button>
+          <button type="button" class="btn-random-prescription" id="openPrescriptionBtn">
+            💌 오늘의 랜덤 처방전 뽑기
+          </button>
+        </div>
+
+        <div class="upload-card" id="uploadCard">
+          <div class="upload-card-header">
+            <div class="selected-color-indicator" id="selectedColorIndicator">
+              <span class="indicator-heart" id="indicatorHeart">💛</span>
+              <div>
+                <span class="step-label">나의 마음 기록하기</span>
+                <h2 class="upload-title" id="uploadTitle">노란색을 고르셨네요! 어떤 감정인가요?</h2>
+              </div>
+            </div>
+          </div>
+
+          <form id="mindForm" class="mind-form">
+            <div class="form-group">
+              <label class="form-label">
+                <span>오늘의 감정 선택</span>
+                <span class="label-sub">선택한 색깔의 감정 중 하나를 고르거나 직접 적어보세요</span>
+              </label>
+              <div class="emotion-chips" id="emotionChips"></div>
+              <input
+                type="text"
+                id="customEmotionInput"
+                class="form-input mt-2"
+                placeholder="선택한 감정이 표시됩니다 (직접 수정하거나 새로운 감정을 적어도 좋아요!)"
+                maxlength="30"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                <span id="photoLabelTitle">내 마음 색깔이 담긴 사진 올리기</span>
+                <span class="label-sub">주변에서 이 색깔이 들어간 물건, 풍경, 그림 등을 찍거나 골라주세요</span>
+              </label>
+
+              <div class="photo-upload-area" id="photoUploadArea">
+                <input
+                  type="file"
+                  id="photoInput"
+                  accept="image/*"
+                  class="hidden-file-input"
+                />
+                <div class="photo-placeholder" id="photoPlaceholder">
+                  <div class="camera-icon-circle" id="cameraIconCircle">📷</div>
+                  <p class="photo-guide-main" id="photoGuideMain">
+                    여기를 눌러 사진을 찍거나 앨범에서 선택하세요
+                  </p>
+                  <p class="photo-guide-sub">
+                    스마트폰에서는 바로 카메라로 촬영할 수도 있어요! (자동 용량 최적화)
+                  </p>
+                  <div class="photo-action-btns">
+                    <button type="button" class="btn-secondary-sm" id="triggerCameraBtn">📸 카메라로 찍기</button>
+                    <button type="button" class="btn-secondary-sm" id="triggerGalleryBtn">🖼️ 사진 고르기</button>
+                  </div>
+                </div>
+
+                <div class="photo-preview-wrap hidden" id="photoPreviewWrap">
+                  <img id="photoPreviewImg" src="" alt="업로드할 사진 미리보기" />
+                  <div class="photo-preview-actions">
+                    <button type="button" class="btn-change-photo" id="changePhotoBtn">🔄 다른 사진 고르기</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="recordDateInput" class="form-label">날짜</label>
+                <input
+                  type="date"
+                  id="recordDateInput"
+                  class="form-input"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="studentIdInput" class="form-label">학번</label>
+                <input
+                  type="text"
+                  id="studentIdInput"
+                  class="form-input"
+                  placeholder="예: 20315 (학년 반 번호)"
+                  maxlength="15"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="studentNameInput" class="form-label">이름 (또는 닉네임)</label>
+                <input
+                  type="text"
+                  id="studentNameInput"
+                  class="form-input"
+                  placeholder="예: 김위클 / 봄바람"
+                  maxlength="20"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="storyInput" class="form-label">
+                <span>사진 소개 & 오늘 내 마음 한마디</span>
+                <span class="label-sub">왜 이 사진을 골랐는지, 오늘 어떤 마음이 들었는지 편하게 적어주세요</span>
+              </label>
+              <textarea
+                id="storyInput"
+                class="form-textarea"
+                rows="3"
+                placeholder="예: 책상 위에 놓인 노란색 포스트잇을 찍었어요. 오늘 친구랑 맛있는 급식을 먹어서 마음이 노란색처럼 따뜻하고 기분이 좋았어요!"
+                maxlength="300"
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+              <span>🌱 내 마음 색깔 업로드하고 마음 처방전 받기</span>
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>💛 <strong>Wee Class (위클래스)</strong>는 언제나 여러분의 모든 색깔의 마음을 응원하고 기다립니다.</p>
+      <p class="footer-sub">오늘 마음의 색깔은? · 따뜻한 마음 나눔 프로젝트</p>
+    </div>
+  </footer>
+
+  <!-- 마음 처방전 팝업 -->
+  <div class="modal-backdrop hidden" id="prescriptionModal">
+    <div class="modal-card prescription-card">
+      <div class="prescription-ribbon" id="prescriptionRibbon"></div>
+      <div class="prescription-header">
+        <span class="prescription-tag">💌 Wee Class 마음 약국 처방전</span>
+        <h3 class="prescription-title" id="prescriptionTitle">오늘의 마음 처방전이 도착했어요</h3>
+        <p class="prescription-recipient" id="prescriptionRecipient">소중한 당신의 마음을 위한 따뜻한 한마디</p>
+      </div>
+
+      <div class="prescription-body">
+        <div class="prescription-color-pill" id="prescriptionColorPill">
+          ❤️ 빨간색 · 사랑
+        </div>
+
+        <div class="prescription-quote-box">
+          <p class="quote-mark">“</p>
+          <p class="prescription-quote" id="prescriptionQuote">
+            어떤 감정이든 찾아왔다는 건, 오늘 하루도 열심히 살아냈다는 증거예요.
+          </p>
+          <p class="prescription-author" id="prescriptionAuthor">- 위클래스 마음 편지 -</p>
+        </div>
+
+        <div class="prescription-guide-box">
+          <div class="guide-box-title">🌿 오늘 나를 위한 마음 다스리기 & 감정 조절 팁</div>
+          <h4 class="guide-method-name" id="prescriptionMethodTitle">4-7-8 나비 호흡법</h4>
+          <p class="guide-method-desc" id="prescriptionMethodDesc">
+            코로 4초간 숨을 들이마시고, 7초간 멈춘 뒤, 입으로 8초간 후- 하고 길게 내쉬어 보세요.
+          </p>
+        </div>
+      </div>
+
+      <div class="prescription-footer">
+        <button type="button" class="btn-secondary" id="anotherPrescriptionBtn">
+          🎲 다른 처방전 또 뽑아보기
+        </button>
+        <button type="button" class="btn-primary" id="closePrescriptionBtn">
+          ✨ 고마워요, 마음 갤러리 보기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 선생님 관리 모달 (비밀번호 7942) -->
+  <div class="modal-backdrop hidden" id="adminModal">
+    <div class="modal-card admin-card">
+      <div class="admin-header">
+        <h3>⚙️ 선생님 관리 및 실시간 서버(Firebase) 설정</h3>
+        <button type="button" class="btn-close" id="closeAdminModalBtn">✕</button>
+      </div>
+
+      <div id="adminAuthStep" class="admin-body">
+        <p class="admin-desc">
+          게시물 삭제 권한 활성화 및 파이어베이스(Firebase) 연동을 위해 선생님 비밀번호를 입력해 주세요.
+        </p>
+        <div class="admin-pin-row">
+          <input
+            type="password"
+            id="adminPinInput"
+            class="form-input"
+            placeholder="선생님 비밀번호 입력 (7942)"
+            maxlength="10"
+          />
+          <button type="button" class="btn-primary" id="verifyAdminPinBtn">확인</button>
+        </div>
+        <p class="admin-error hidden" id="adminPinError">비밀번호가 일치하지 않습니다.</p>
+      </div>
+
+      <div id="adminConfigStep" class="admin-body hidden">
+        <div class="admin-status-banner">
+          <span>✅ <strong>선생님 관리 모드</strong>가 켜졌습니다! 이제 갤러리 각 게시물의 <strong>[🗑️ 삭제]</strong> 버튼으로 바로 글을 지울 수 있습니다.</span>
+          <button type="button" class="btn-outline-sm" id="logoutAdminBtn">관리모드 끄기</button>
+        </div>
+
+        <hr class="divider" />
+
+        <h4 class="admin-subtitle">🔥 파이어베이스(Firebase) 실시간 연동 설정</h4>
+        <p class="admin-desc">
+          현재 선생님의 <code>wee-color</code> 파이어베이스가 기본 연결되어 있습니다! 다른 프로젝트로 바꾸시려면 아래에 붙여넣고 저장하세요.
+        </p>
+
+        <textarea
+          id="firebaseConfigTextarea"
+          class="form-textarea code-textarea"
+          rows="8"
+        ></textarea>
+
+        <div class="admin-config-actions">
+          <button type="button" class="btn-secondary" id="clearFirebaseConfigBtn">기본 연동으로 초기화</button>
+          <button type="button" class="btn-primary" id="saveFirebaseConfigBtn">🔥 연동 저장하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 상세보기 모달 -->
+  <div class="modal-backdrop hidden" id="detailModal">
+    <div class="modal-card detail-card">
+      <button type="button" class="btn-close detail-close" id="closeDetailModalBtn">✕</button>
+      <div id="detailModalContent"></div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toastMsg"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <!-- 자체 내장 스크립트 (외부 파일 충돌 방지 및 즉시 화면 표시 보장) -->
+  <script>
+    const ADMIN_PIN = "7942";
+    const STORAGE_KEY_POSTS = "wee_heart_color_posts_v1";
+    const STORAGE_KEY_FIREBASE = "wee_heart_firebase_config_v1";
+
+    const DEFAULT_FIREBASE_CONFIG = {
+      apiKey: "AIzaSyB_jtM931uKpGUc9wxLo5s_9wDRBj7XMwE",
+      authDomain: "wee-color.firebaseapp.com",
+      projectId: "wee-color",
+      storageBucket: "wee-color.firebasestorage.app",
+      messagingSenderId: "655020876661",
+      appId: "1:655020876661:web:39269670dcf0eb374e293c"
+    };
+
+    const HEART_COLORS = [
+      {
+        id: "red",
+        name: "빨간색",
+        emoji: "❤️",
+        hex: "#ef4444",
+        softBg: "#fff1f2",
+        stroke: "#dc2626",
+        emotions: ["사랑", "열정", "분노", "짜증", "설렘", "에너지"],
+        guide: "주변에서 빨간색이 들어간 물건이나 풍경을 찾아 찍어보세요!"
+      },
+      {
+        id: "orange",
+        name: "주황색",
+        emoji: "🧡",
+        hex: "#f97316",
+        softBg: "#fff7ed",
+        stroke: "#ea580c",
+        emotions: ["활기", "신남", "기대감", "긴장", "따뜻함", "용기"],
+        guide: "주변에서 주황색이나 따뜻한 빛깔이 담긴 순간을 찍어보세요!"
+      },
+      {
+        id: "yellow",
+        name: "노란색",
+        emoji: "💛",
+        hex: "#eab308",
+        softBg: "#fefce8",
+        stroke: "#ca8a04",
+        emotions: ["희망", "행복", "기쁨", "부러움", "뿌듯함", "반가움"],
+        guide: "주변에서 노란색이 들어간 밝고 귀여운 순간을 찍어보세요!"
+      },
+      {
+        id: "green",
+        name: "초록색",
+        emoji: "💚",
+        hex: "#22c55e",
+        softBg: "#f0fdf4",
+        stroke: "#16a34a",
+        emotions: ["편안함", "평온", "안정", "휴식", "여유", "회복"],
+        guide: "주변의 나무, 화분, 혹은 초록색 물건을 찾아 찍어보세요!"
+      },
+      {
+        id: "blue",
+        name: "파란색",
+        emoji: "💙",
+        hex: "#3b82f6",
+        softBg: "#eff6ff",
+        stroke: "#2563eb",
+        emotions: ["우울함", "슬픔", "차분함", "상쾌함", "그리움", "진지함"],
+        guide: "하늘이나 파란색 소품 등 내 마음과 닮은 파란빛을 찍어보세요!"
+      },
+      {
+        id: "purple",
+        name: "보라색",
+        emoji: "💜",
+        hex: "#a855f7",
+        softBg: "#faf5ff",
+        stroke: "#9333ea",
+        emotions: ["불안", "걱정", "외로움", "신비로움", "고민", "섬세함"],
+        guide: "보라색 물건이나 오묘한 분위기가 담긴 장면을 찍어보세요!"
+      },
+      {
+        id: "white",
+        name: "흰색",
+        emoji: "🤍",
+        hex: "#94a3b8",
+        fillHex: "#ffffff",
+        softBg: "#f8fafc",
+        stroke: "#64748b",
+        emotions: ["아무생각 없음", "비움", "후련함", "순수", "새출발", "멍함"],
+        guide: "하얀 종이, 구름, 우유 등 깨끗한 흰색이 담긴 사진을 찍어보세요!"
+      },
+      {
+        id: "black",
+        name: "검은색",
+        emoji: "🖤",
+        hex: "#334155",
+        fillHex: "#1e293b",
+        softBg: "#f1f5f9",
+        stroke: "#0f172a",
+        emotions: ["지침", "무기력", "스트레스", "답답함", "피곤함", "혼자있고 싶음"],
+        guide: "검은색 소품이나 그림자 등 지금 내 마음을 표현하는 사진을 찍어보세요!"
+      }
+    ];
+
+    const PRESCRIPTIONS = [
+      {
+        colors: ["red", "black", "purple"],
+        quote: "화가 나거나 마음이 답답할 땐, 내 마음이 '나 지금 힘들어, 나를 좀 돌봐줘'라고 보내는 신호예요. 잠시 멈춰도 괜찮아요.",
+        author: "위클래스 마음 편지",
+        methodTitle: "🌬️ 감정의 온도를 낮추는 '4-7-8 호흡법'",
+        methodDesc: "코로 4초 동안 천천히 숨을 들이마시고, 7초 동안 숨을 멈춘 뒤, 입으로 8초 동안 '후-' 소리를 내며 길게 내쉬어 보세요. 3번만 반복해도 심장 박동이 차분해지고 화와 긴장이 가라앉아요."
+      },
+      {
+        colors: ["blue", "purple", "black"],
+        quote: "비 오는 날이 있어야 무지개도 뜨고 나무도 자라나듯, 우울하고 슬픈 날도 우리 삶에 꼭 필요한 자연스러운 날씨랍니다.",
+        author: "위클래스 마음 편지",
+        methodTitle: "🦋 나를 토닥이는 '나비 포옹법 (Butterfly Hug)'",
+        methodDesc: "두 팔을 가슴 앞에서 교차해 양손을 양쪽 어깨에 올린 뒤, 나비가 날개짓하듯 번갈아 가며 내 어깨를 토닥토닥 다독여 주세요. '오늘도 잘 버텼어, 괜찮아'라고 속삭여 주면 불안과 슬픔이 한결 줄어듭니다."
+      },
+      {
+        colors: ["white", "green"],
+        quote: "아무 생각 없이 멍하니 있는 시간은 멈춘 시간이 아니라, 내 마음의 배터리를 조용히 충전하는 가장 소중한 시간이에요.",
+        author: "위클래스 마음 편지",
+        methodTitle: "👀 지금 여기에 머무는 '5-4-3-2-1 감각 깨우기'",
+        methodDesc: "주변에서 눈에 보이는 것 5가지, 손으로 만져지는 느낌 4가지, 들리는 소리 3가지, 맡아지는 냄새 2가지, 입안의 느낌 1가지를 천천히 찾아보세요. 복잡한 머릿속이 맑아지고 편안함이 찾아옵니다."
+      },
+      {
+        colors: ["red", "orange", "yellow"],
+        quote: "오늘 당신의 마음속에 반짝이는 그 따뜻한 에너지가 주변 친구들에게도 기분 좋은 햇살처럼 전해질 거예요!",
+        author: "위클래스 마음 편지",
+        methodTitle: "📝 행복을 오래 남기는 '감정 저금통 기법'",
+        methodDesc: "기분 좋은 일이 있을 때 그 순간의 소리, 풍경, 기분을 머릿속으로 사진 찍듯 5초간 가만히 음미해 보세요. 우리 뇌는 음미한 긍정적 감정을 훨씬 더 깊고 오래 기억한답니다."
+      },
+      {
+        colors: ["all"],
+        quote: "세상에 나쁜 감정은 하나도 없어요. 모든 감정은 잠시 머물다 가는 손님일 뿐이니, 있는 그대로 내 마음을 안아주세요.",
+        author: "위클래스 마음 약국",
+        methodTitle: "🏷️ 감정에 이름표 붙여주기 (Affect Labeling)",
+        methodDesc: "마음이 복잡할 때는 '아, 내가 지금 속상하구나', '내가 지금 긴장했구나' 하고 내 감정을 제3자처럼 말로 불러보세요. 감정에 이름표를 붙여주는 것만으로도 뇌의 흥분이 가라앉고 감정을 조절하기 쉬워집니다."
+      },
+      {
+        colors: ["all"],
+        quote: "오늘 하루가 완벽하지 않아도 괜찮아요. 숨 쉬고, 느끼고, 이렇게 내 마음을 돌아본 것만으로도 이미 충분히 멋진 하루예요.",
+        author: "위클래스 마음 약국",
+        methodTitle: "✊ 주먹 쥐었다 펴기 '근육 이완법'",
+        methodDesc: "양손 주먹을 5초 동안 온 힘을 다해 꽉 쥐었다가, '툭!' 하고 한 번에 힘을 풀며 손바닥을 펴보세요. 손끝으로 빠져나가는 따뜻한 감각에 집중하면 몸에 쌓인 스트레스가 함께 빠져나갑니다."
+      },
+      {
+        colors: ["blue", "black", "purple"],
+        quote: "혼자 감당하기 무거운 마음은 나누면 반이 됩니다. 언제든 위클래스 문을 똑똑 두드려 주세요. 따뜻한 차 한 잔과 함께 기다릴게요.",
+        author: "위클래스 선생님",
+        methodTitle: "💧 차가운 물 한 모금과 어깨 내리기",
+        methodDesc: "자신도 모르게 귀 가까이 올라간 양쪽 어깨를 '후-' 숨을 내쉬며 아래로 툭 떨어뜨려 보세요. 그리고 시원한 물 한 모금을 천천히 마시면 교감신경이 안정되어 감정의 파도가 잔잔해집니다."
+      },
+      {
+        colors: ["yellow", "orange", "green"],
+        quote: "네가 웃으면 세상이 환해지고, 네가 평온하면 주변도 따뜻해져. 오늘 찾아온 이 좋은 기분을 마음껏 누리길 바랄게!",
+        author: "위클래스 마음 편지",
+        methodTitle: "💌 나에게 보내는 한 줄 칭찬 처방",
+        methodDesc: "오늘 내가 해낸 아주 사소한 일 하나(제시간에 일어나기, 급식 맛있게 먹기, 마음 색깔 기록하기)를 떠올리고 '나 오늘 참 수고했어!'라고 스스로에게 마음속으로 박수를 보내주세요."
+      }
+    ];
+
+    function createSampleSvgDataUrl(bgHex, circleHex, emojiText) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="450" viewBox="0 0 600 450">
+        <rect width="600" height="450" fill="${bgHex}"/>
+        <circle cx="300" cy="210" r="110" fill="${circleHex}" opacity="0.25"/>
+        <circle cx="300" cy="210" r="75" fill="${circleHex}" opacity="0.45"/>
+        <text x="300" y="232" font-size="72" text-anchor="middle">${emojiText}</text>
+        <text x="300" y="370" font-size="22" font-family="sans-serif" fill="#57493f" text-anchor="middle" font-weight="bold">내 마음의 색깔 한 조각</text>
+      </svg>`;
+      return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+    }
+
+    const SAMPLE_POSTS = [
+      {
+        id: "sample-1",
+        colorId: "yellow",
+        emotion: "희망",
+        recordDate: "2026-11-17",
+        studentId: "20312",
+        studentName: "햇살이",
+        story: "창가에 놓인 노란색 메모지를 찍었어요! 오늘 수행평가가 끝나서 마음이 노란 개나리처럼 밝고 후련해요.",
+        photoUrl: createSampleSvgDataUrl("#fef9c3", "#eab308", "🌼"),
+        cheers: 7,
+        createdAt: Date.now() - 1000 * 60 * 45
+      },
+      {
+        id: "sample-2",
+        colorId: "green",
+        emotion: "편안함",
+        recordDate: "2026-11-17",
+        studentId: "10504",
+        studentName: "초록나무",
+        story: "위클래스 입구에 있는 초록색 화분을 보니까 복잡했던 마음이 차분해지고 편안해졌어요.",
+        photoUrl: createSampleSvgDataUrl("#dcfce7", "#22c55e", "🌿"),
+        cheers: 5,
+        createdAt: Date.now() - 1000 * 60 * 120
+      },
+      {
+        id: "sample-3",
+        colorId: "white",
+        emotion: "아무생각 없음",
+        recordDate: "2026-11-16",
+        studentId: "30121",
+        studentName: "구름빵",
+        story: "점심 먹고 운동장 위 하얀 구름을 봤어요. 가끔은 아무 생각 없이 멍때리는 시간도 꼭 필요한 것 같아요!",
+        photoUrl: createSampleSvgDataUrl("#f1f5f9", "#94a3b8", "☁️"),
+        cheers: 9,
+        createdAt: Date.now() - 1000 * 60 * 240
+      }
+    ];
+
+    function getTodayDateString() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    let selectedColor = HEART_COLORS[0];
+    let selectedEmotion = HEART_COLORS[0].emotions[0];
+    let compressedPhotoDataUrl = "";
+    let currentFilter = "all";
+    let visiblePostLimit = 12;
+    let isAdminAuthenticated = false;
+    let firestoreDb = null;
+    let unsubscribeFirestore = null;
+    let postsList = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const dateInput = document.getElementById("recordDateInput");
+      if (dateInput) dateInput.value = getTodayDateString();
+      renderHeartGrid();
+      renderFilterBar();
+      bindEvents();
+      // 1) 먼저 기본 데이터를 즉시 화면에 표시하여 로딩 멈춤 방지!
+      loadLocalFallbackImmediately();
+      // 2) 그 다음 백그라운드에서 파이어베이스 실시간 연결 시도
+      initDataConnection();
+    });
+
+    function loadLocalFallbackImmediately() {
+      const saved = localStorage.getItem(STORAGE_KEY_POSTS);
+      if (saved) {
+        try {
+          postsList = JSON.parse(saved);
+        } catch (_) {
+          postsList = [...SAMPLE_POSTS];
+        }
+      } else {
+        postsList = [...SAMPLE_POSTS];
+      }
+      renderFeed();
+    }
+
+    function showStepPage(stepNumber) {
+      const page1 = document.getElementById("pageStep1");
+      const page2 = document.getElementById("pageStep2");
+      if (stepNumber === 2) {
+        page1.classList.add("hidden");
+        page2.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        page2.classList.add("hidden");
+        page1.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function getHeartSvgMarkup(colorObj) {
+      const fill = colorObj.fillHex || colorObj.hex;
+      const stroke = colorObj.stroke || colorObj.hex;
+      return `
+        <svg class="heart-svg" viewBox="0 0 24 24" fill="${fill}" stroke="${stroke}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      `;
+    }
+
+    function renderHeartGrid() {
+      const grid = document.getElementById("heartGrid");
+      grid.innerHTML = HEART_COLORS.map((c) => {
+        const emotionTags = c.emotions
+          .slice(0, 4)
+          .map((em) => `<span class="mini-emotion-tag">${em}</span>`)
+          .join("");
+
+        return `
+          <button
+            type="button"
+            class="heart-card"
+            data-color-id="${c.id}"
+            style="--card-accent: ${c.hex}; --card-soft-bg: ${c.softBg};"
+          >
+            <div class="heart-svg-wrap">
+              ${getHeartSvgMarkup(c)}
+            </div>
+            <div class="heart-info">
+              <div class="heart-color-name">
+                <span class="heart-color-title">${c.name}</span>
+                <span class="heart-go-arrow">기록하기 →</span>
+              </div>
+              <div class="heart-emotions-list">
+                ${emotionTags}
+              </div>
+            </div>
+          </button>
+        `;
+      }).join("");
+
+      grid.querySelectorAll(".heart-card").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const colorId = btn.getAttribute("data-color-id");
+          selectHeartColorAndOpenPage(colorId);
+        });
+      });
+    }
+
+    function selectHeartColorAndOpenPage(colorId) {
+      const found = HEART_COLORS.find((c) => c.id === colorId);
+      if (!found) return;
+      selectedColor = found;
+      selectedEmotion = found.emotions[0];
+
+      document.documentElement.style.setProperty("--selected-theme", found.hex);
+      document.documentElement.style.setProperty("--selected-theme-soft", found.softBg);
+
+      document.getElementById("indicatorHeart").textContent = found.emoji;
+      document.getElementById("uploadTitle").textContent = `${found.name}을 고르셨네요! 어떤 감정인가요?`;
+      document.getElementById("photoLabelTitle").textContent = `📸 '${found.name}'이 포함된 사진 찍기 / 올리기`;
+      document.getElementById("photoGuideMain").textContent = found.guide;
+
+      renderEmotionChips(found);
+      showStepPage(2);
+    }
+
+    function renderEmotionChips(colorObj) {
+      const chipContainer = document.getElementById("emotionChips");
+      const customInput = document.getElementById("customEmotionInput");
+
+      chipContainer.innerHTML = colorObj.emotions
+        .map(
+          (emotion, idx) => `
+          <button
+            type="button"
+            class="emotion-chip-btn ${idx === 0 ? "selected" : ""}"
+            data-emotion="${emotion}"
+          >
+            #${emotion}
+          </button>
+        `
+        )
+        .join("");
+
+      customInput.value = colorObj.emotions[0];
+
+      chipContainer.querySelectorAll(".emotion-chip-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          chipContainer.querySelectorAll(".emotion-chip-btn").forEach((b) => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          const em = btn.getAttribute("data-emotion");
+          selectedEmotion = em;
+          customInput.value = em;
+        });
+      });
+    }
+
+    function handleFileSelect(file) {
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        showToast("사진(이미지) 파일만 업로드할 수 있어요!");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX_SIZE = 720;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height && width > MAX_SIZE) {
+            height = Math.round((height * MAX_SIZE) / width);
+            width = MAX_SIZE;
+          } else if (height >= width && height > MAX_SIZE) {
+            width = Math.round((width * MAX_SIZE) / height);
+            height = MAX_SIZE;
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          compressedPhotoDataUrl = canvas.toDataURL("image/jpeg", 0.75);
+
+          const previewImg = document.getElementById("photoPreviewImg");
+          previewImg.src = compressedPhotoDataUrl;
+          document.getElementById("photoPlaceholder").classList.add("hidden");
+          document.getElementById("photoPreviewWrap").classList.remove("hidden");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function parseFirebaseConfigInput(rawText) {
+      if (!rawText || !rawText.trim()) return null;
+      const keys = ["apiKey", "authDomain", "projectId", "storageBucket", "messagingSenderId", "appId"];
+      const extracted = {};
+
+      keys.forEach((key) => {
+        const regex = new RegExp(`${key}\\s*:\\s*["']([^"']+)["']`);
+        const match = rawText.match(regex);
+        if (match && match[1]) {
+          extracted[key] = match[1].trim();
+        }
+      });
+
+      if (extracted.apiKey && extracted.projectId) {
+        return extracted;
+      }
+
+      try {
+        const parsed = JSON.parse(rawText);
+        if (parsed.apiKey && parsed.projectId) return parsed;
+      } catch (_) {}
+      return null;
+    }
+
+    function initDataConnection() {
+      const savedConfigStr = localStorage.getItem(STORAGE_KEY_FIREBASE);
+      if (savedConfigStr) {
+        try {
+          const configObj = JSON.parse(savedConfigStr);
+          connectToFirebase(configObj);
+          return;
+        } catch (e) {
+          console.warn("저장된 Firebase 설정 오류:", e);
+        }
+      }
+      if (DEFAULT_FIREBASE_CONFIG && DEFAULT_FIREBASE_CONFIG.apiKey) {
+        connectToFirebase(DEFAULT_FIREBASE_CONFIG);
+        return;
+      }
+      useLocalDemoMode();
+    }
+
+    function connectToFirebase(configObj) {
+      try {
+        if (!window.firebase) {
+          useLocalDemoMode();
+          return;
+        }
+
+        if (!firebase.apps.length) {
+          firebase.initializeApp(configObj);
+        }
+        firestoreDb = firebase.firestore();
+
+        if (unsubscribeFirestore) unsubscribeFirestore();
+
+        unsubscribeFirestore = firestoreDb
+          .collection("weeHeartPosts")
+          .orderBy("createdAt", "desc")
+          .limit(100)
+          .onSnapshot(
+            (snapshot) => {
+              const items = [];
+              snapshot.forEach((doc) => {
+                items.push({ id: doc.id, ...doc.data() });
+              });
+              postsList = items;
+              updateConnectionIndicator(true);
+              renderFeed();
+            },
+            (error) => {
+              console.warn("Firestore 실시간 구독 대기/오류:", error);
+              useLocalDemoMode();
+            }
+          );
+      } catch (err) {
+        console.warn("Firebase 연결 실패:", err);
+        useLocalDemoMode();
+      }
+    }
+
+    function useLocalDemoMode() {
+      firestoreDb = null;
+      if (unsubscribeFirestore) {
+        unsubscribeFirestore();
+        unsubscribeFirestore = null;
+      }
+      updateConnectionIndicator(false);
+      loadLocalFallbackImmediately();
+    }
+
+    function updateConnectionIndicator(isOnline) {
+      const dot = document.getElementById("statusDot");
+      const text = document.getElementById("statusText");
+      if (isOnline) {
+        dot.classList.add("online");
+        text.textContent = "실시간 연동 중 (모두에게 공유됨)";
+      } else {
+        dot.classList.remove("online");
+        text.textContent = "마음 정원 (기기 저장 모드)";
+      }
+    }
+
+    async function submitMindPost(e) {
+      e.preventDefault();
+
+      const emotionVal = document.getElementById("customEmotionInput").value.trim() || selectedEmotion;
+      const recordDateVal = document.getElementById("recordDateInput").value || getTodayDateString();
+      const studentIdVal = document.getElementById("studentIdInput").value.trim();
+      const studentNameVal = document.getElementById("studentNameInput").value.trim();
+      const storyVal = document.getElementById("storyInput").value.trim();
+
+      if (!compressedPhotoDataUrl) {
+        showToast(`📸 '${selectedColor.name}'이 포함된 사진을 먼저 찍거나 골라주세요!`);
+        document.getElementById("photoUploadArea").scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "마음을 업로드하는 중이에요... 🌱";
+
+      const newPost = {
+        colorId: selectedColor.id,
+        emotion: emotionVal,
+        recordDate: recordDateVal,
+        studentId: studentIdVal,
+        studentName: studentNameVal,
+        story: storyVal,
+        photoUrl: compressedPhotoDataUrl,
+        cheers: 1,
+        createdAt: Date.now()
+      };
+
+      try {
+        if (firestoreDb) {
+          // 4초 안에 파이어베이스 응답이 없으면 로컬 저장소에도 백업 저장
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("timeout")), 4000)
+          );
+          await Promise.race([
+            firestoreDb.collection("weeHeartPosts").add(newPost),
+            timeoutPromise
+          ]);
+        } else {
+          const localPost = { id: "post-" + Date.now(), ...newPost };
+          postsList.unshift(localPost);
+          localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(postsList));
+          renderFeed();
+        }
+      } catch (err) {
+        const localPost = { id: "post-" + Date.now(), ...newPost };
+        postsList.unshift(localPost);
+        localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(postsList));
+        renderFeed();
+      } finally {
+        document.getElementById("storyInput").value = "";
+        compressedPhotoDataUrl = "";
+        document.getElementById("photoInput").value = "";
+        document.getElementById("photoPlaceholder").classList.remove("hidden");
+        document.getElementById("photoPreviewWrap").classList.add("hidden");
+
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "<span>🌱 내 마음 색깔 업로드하고 마음 처방전 받기</span>";
+
+        showToast("💖 내 마음 색깔이 따뜻하게 등록되었어요!");
+        openPrescriptionModal(selectedColor, emotionVal, studentNameVal);
+      }
+    }
+
+    async function handleCheerPost(postId) {
+      const target = postsList.find((p) => p.id === postId);
+      if (!target) return;
+      const nextCheers = (target.cheers || 0) + 1;
+
+      if (firestoreDb) {
+        try {
+          await firestoreDb.collection("weeHeartPosts").doc(postId).update({
+            cheers: nextCheers
+          });
+        } catch (e) {
+          target.cheers = nextCheers;
+          renderFeed();
+        }
+      } else {
+        target.cheers = nextCheers;
+        localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(postsList));
+        renderFeed();
+      }
+      showToast("🥰 따뜻한 공감 하트를 보냈어요!");
+    }
+
+    async function handleDeletePost(postId) {
+      if (!isAdminAuthenticated) {
+        const inputPin = window.prompt("게시물을 삭제하려면 선생님 비밀번호(7942)를 입력해 주세요:");
+        if (inputPin === null) return;
+        if (inputPin.trim() !== ADMIN_PIN) {
+          showToast("❌ 비밀번호가 일치하지 않습니다.");
+          return;
+        }
+        isAdminAuthenticated = true;
+      } else {
+        if (!window.confirm("이 게시물을 삭제하시겠습니까?")) return;
+      }
+
+      if (firestoreDb) {
+        try {
+          await firestoreDb.collection("weeHeartPosts").doc(postId).delete();
+          showToast("🗑️ 게시물이 삭제되었습니다.");
+        } catch (e) {
+          postsList = postsList.filter((p) => p.id !== postId);
+          renderFeed();
+        }
+      } else {
+        postsList = postsList.filter((p) => p.id !== postId);
+        localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(postsList));
+        renderFeed();
+        showToast("🗑️ 게시물이 삭제되었습니다.");
+      }
+    }
+
+    function renderFilterBar() {
+      const bar = document.getElementById("filterBar");
+      const allBtn = `<button type="button" class="filter-btn active" data-filter="all">🌈 전체 보기</button>`;
+      const colorBtns = HEART_COLORS.map(
+        (c) => `<button type="button" class="filter-btn" data-filter="${c.id}">${c.emoji} ${c.name}</button>`
+      ).join("");
+
+      bar.innerHTML = allBtn + colorBtns;
+
+      bar.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          bar.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentFilter = btn.getAttribute("data-filter");
+          visiblePostLimit = 12;
+          renderFeed();
+        });
+      });
+    }
+
+    function formatPostDate(post) {
+      if (post && post.recordDate) {
+        const parts = String(post.recordDate).split("-");
+        if (parts.length === 3) {
+          return `${parts[0]}. ${Number(parts[1])}. ${Number(parts[2])}.`;
+        }
+        return post.recordDate;
+      }
+      const timestamp = post ? post.createdAt : null;
+      if (!timestamp) return "오늘";
+      const d = new Date(timestamp);
+      return `${d.getFullYear()}. ${d.getMonth() + 1}. ${d.getDate()}.`;
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderFeed() {
+      const feedGrid = document.getElementById("feedGrid");
+      const totalCountEl = document.getElementById("totalCount");
+      const loadMoreWrap = document.getElementById("loadMoreWrap");
+      totalCountEl.textContent = postsList.length;
+
+      const filtered =
+        currentFilter === "all"
+          ? postsList
+          : postsList.filter((item) => item.colorId === currentFilter);
+
+      if (filtered.length === 0) {
+        loadMoreWrap.classList.add("hidden");
+        feedGrid.innerHTML = `
+          <div class="empty-feed">
+            <p style="font-size: 2rem; margin-bottom: 8px;">🌱</p>
+            <p><strong>아직 등록된 마음 기록이 없어요.</strong></p>
+            <p>위에서 색깔 하트를 눌러 첫 번째로 오늘 내 마음의 색깔 사진을 올려보세요!</p>
+          </div>
+        `;
+        return;
+      }
+
+      const visibleItems = filtered.slice(0, visiblePostLimit);
+      if (filtered.length > visiblePostLimit) {
+        loadMoreWrap.classList.remove("hidden");
+      } else {
+        loadMoreWrap.classList.add("hidden");
+      }
+
+      feedGrid.innerHTML = visibleItems
+        .map((post) => {
+          const colorObj = HEART_COLORS.find((c) => c.id === post.colorId) || HEART_COLORS[0];
+          return `
+            <article class="feed-card">
+              <div class="feed-photo-box" data-detail-id="${escapeHtml(post.id)}">
+                <img src="${post.photoUrl}" alt="${escapeHtml(colorObj.name)} 사진" loading="lazy" decoding="async" />
+                <span class="feed-color-badge">
+                  ${colorObj.emoji} ${colorObj.name}
+                </span>
+                <span class="feed-emotion-badge" style="background: ${colorObj.hex};">
+                  #${escapeHtml(post.emotion)}
+                </span>
+              </div>
+              <div class="feed-body">
+                <div class="feed-author-row">
+                  <div class="feed-author">
+                    <span class="feed-student-id">${escapeHtml(post.studentId)}</span>
+                    <span>${escapeHtml(post.studentName)}</span>
+                  </div>
+                  <span class="feed-date">📅 ${escapeHtml(formatPostDate(post))}</span>
+                </div>
+                <p class="feed-story">${escapeHtml(post.story)}</p>
+                <div class="feed-footer">
+                  <button type="button" class="btn-cheer" data-cheer-id="${escapeHtml(post.id)}">
+                    <span>💗 공감해요</span>
+                    <strong>${post.cheers || 0}</strong>
+                  </button>
+                  <button type="button" class="btn-delete-post" data-delete-id="${escapeHtml(post.id)}" title="선생님 삭제">
+                    🗑️ 삭제
+                  </button>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+
+      feedGrid.querySelectorAll("[data-cheer-id]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          handleCheerPost(btn.getAttribute("data-cheer-id"));
+        });
+      });
+
+      feedGrid.querySelectorAll("[data-delete-id]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          handleDeletePost(btn.getAttribute("data-delete-id"));
+        });
+      });
+
+      feedGrid.querySelectorAll("[data-detail-id]").forEach((box) => {
+        box.addEventListener("click", () => {
+          openDetailModal(box.getAttribute("data-detail-id"));
+        });
+      });
+    }
+
+    function openPrescriptionModal(colorObj, emotionText, userName) {
+      const targetColor = colorObj || selectedColor;
+      const matchingPool = PRESCRIPTIONS.filter(
+        (p) => p.colors.includes(targetColor.id) || p.colors.includes("all")
+      );
+      const chosen = matchingPool[Math.floor(Math.random() * matchingPool.length)];
+
+      document.getElementById("prescriptionRibbon").style.background = targetColor.hex;
+      document.getElementById("prescriptionTitle").textContent = userName
+        ? `${userName}님을 위한 오늘의 마음 처방전`
+        : "오늘 당신을 위한 마음 처방전";
+      document.getElementById("prescriptionColorPill").innerHTML = `${targetColor.emoji} ${targetColor.name} · #${escapeHtml(emotionText || targetColor.emotions[0])}`;
+      document.getElementById("prescriptionColorPill").style.background = targetColor.softBg;
+      document.getElementById("prescriptionColorPill").style.color = targetColor.stroke;
+
+      document.getElementById("prescriptionQuote").textContent = chosen.quote;
+      document.getElementById("prescriptionAuthor").textContent = `- ${chosen.author} -`;
+      document.getElementById("prescriptionMethodTitle").textContent = chosen.methodTitle;
+      document.getElementById("prescriptionMethodDesc").textContent = chosen.methodDesc;
+
+      document.getElementById("prescriptionModal").classList.remove("hidden");
+    }
+
+    function openDetailModal(postId) {
+      const post = postsList.find((p) => p.id === postId);
+      if (!post) return;
+      const colorObj = HEART_COLORS.find((c) => c.id === post.colorId) || HEART_COLORS[0];
+
+      const content = document.getElementById("detailModalContent");
+      content.innerHTML = `
+        <img class="detail-img" src="${post.photoUrl}" alt="상세 사진" />
+        <div class="detail-info">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+            <span style="font-weight:700; font-size:1.05rem;">
+              ${colorObj.emoji} ${colorObj.name} · <span style="color:${colorObj.hex}">#${escapeHtml(post.emotion)}</span>
+            </span>
+            <span style="font-size:0.85rem; color:#7a6c61;">📅 ${escapeHtml(formatPostDate(post))}</span>
+          </div>
+          <p style="font-weight:700; margin-bottom:8px;">
+            <span class="feed-student-id">${escapeHtml(post.studentId)}</span> ${escapeHtml(post.studentName)}
+          </p>
+          <p style="line-height:1.65; color:#3d332c; white-space:pre-wrap;">${escapeHtml(post.story)}</p>
+        </div>
+      `;
+      document.getElementById("detailModal").classList.remove("hidden");
+    }
+
+    function bindEvents() {
+      const photoInput = document.getElementById("photoInput");
+
+      document.getElementById("backToStep1Btn").addEventListener("click", () => {
+        showStepPage(1);
+      });
+      document.getElementById("homeBrandBadge").addEventListener("click", () => {
+        showStepPage(1);
+      });
+      document.getElementById("loadMoreBtn").addEventListener("click", () => {
+        visiblePostLimit += 12;
+        renderFeed();
+      });
+
+      document.getElementById("triggerCameraBtn").addEventListener("click", (e) => {
+        e.stopPropagation();
+        photoInput.setAttribute("capture", "environment");
+        photoInput.click();
+      });
+
+      document.getElementById("triggerGalleryBtn").addEventListener("click", (e) => {
+        e.stopPropagation();
+        photoInput.removeAttribute("capture");
+        photoInput.click();
+      });
+
+      document.getElementById("photoPlaceholder").addEventListener("click", () => {
+        photoInput.removeAttribute("capture");
+        photoInput.click();
+      });
+
+      document.getElementById("changePhotoBtn").addEventListener("click", () => {
+        photoInput.removeAttribute("capture");
+        photoInput.click();
+      });
+
+      photoInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handleFileSelect(e.target.files[0]);
+        }
+      });
+
+      document.getElementById("mindForm").addEventListener("submit", submitMindPost);
+
+      document.getElementById("openPrescriptionBtn").addEventListener("click", () => {
+        openPrescriptionModal(selectedColor, document.getElementById("customEmotionInput").value, "");
+      });
+
+      document.getElementById("anotherPrescriptionBtn").addEventListener("click", () => {
+        openPrescriptionModal(selectedColor, document.getElementById("customEmotionInput").value, "");
+      });
+
+      document.getElementById("closePrescriptionBtn").addEventListener("click", () => {
+        document.getElementById("prescriptionModal").classList.add("hidden");
+        showStepPage(1);
+        setTimeout(() => {
+          document.getElementById("gallerySection").scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      });
+
+      document.getElementById("closeDetailModalBtn").addEventListener("click", () => {
+        document.getElementById("detailModal").classList.add("hidden");
+      });
+
+      document.getElementById("openAdminModalBtn").addEventListener("click", () => {
+        const savedConfig = localStorage.getItem(STORAGE_KEY_FIREBASE);
+        document.getElementById("firebaseConfigTextarea").value =
+          savedConfig || JSON.stringify(DEFAULT_FIREBASE_CONFIG, null, 2);
+        document.getElementById("adminPinInput").value = "";
+        document.getElementById("adminPinError").classList.add("hidden");
+        updateAdminModalView();
+        document.getElementById("adminModal").classList.remove("hidden");
+      });
+
+      document.getElementById("closeAdminModalBtn").addEventListener("click", () => {
+        document.getElementById("adminModal").classList.add("hidden");
+      });
+
+      document.getElementById("verifyAdminPinBtn").addEventListener("click", verifyAdminPin);
+      document.getElementById("adminPinInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          verifyAdminPin();
+        }
+      });
+
+      document.getElementById("logoutAdminBtn").addEventListener("click", () => {
+        isAdminAuthenticated = false;
+        updateAdminModalView();
+        showToast("선생님 관리 모드가 해제되었습니다.");
+      });
+
+      document.getElementById("saveFirebaseConfigBtn").addEventListener("click", () => {
+        const raw = document.getElementById("firebaseConfigTextarea").value;
+        const parsed = parseFirebaseConfigInput(raw);
+        if (!parsed) {
+          showToast("⚠️ 올바른 firebaseConfig 형식이 아닙니다.");
+          return;
+        }
+        localStorage.setItem(STORAGE_KEY_FIREBASE, JSON.stringify(parsed, null, 2));
+        connectToFirebase(parsed);
+        document.getElementById("adminModal").classList.add("hidden");
+        showToast("🔥 파이어베이스 실시간 연동이 완료되었습니다!");
+      });
+
+      document.getElementById("clearFirebaseConfigBtn").addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY_FIREBASE);
+        document.getElementById("firebaseConfigTextarea").value = JSON.stringify(DEFAULT_FIREBASE_CONFIG, null, 2);
+        connectToFirebase(DEFAULT_FIREBASE_CONFIG);
+        showToast("기본 wee-color 연동으로 초기화되었습니다.");
+      });
+
+      ["prescriptionModal", "adminModal", "detailModal"].forEach((id) => {
+        const modal = document.getElementById(id);
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) modal.classList.add("hidden");
+        });
+      });
+    }
+
+    function verifyAdminPin() {
+      const val = document.getElementById("adminPinInput").value.trim();
+      if (val === ADMIN_PIN) {
+        isAdminAuthenticated = true;
+        document.getElementById("adminPinError").classList.add("hidden");
+        updateAdminModalView();
+        showToast("✅ 선생님 인증이 완료되었습니다.");
+      } else {
+        document.getElementById("adminPinError").classList.remove("hidden");
+      }
+    }
+
+    function updateAdminModalView() {
+      const authStep = document.getElementById("adminAuthStep");
+      const configStep = document.getElementById("adminConfigStep");
+      if (isAdminAuthenticated) {
+        authStep.classList.add("hidden");
+        configStep.classList.remove("hidden");
+      } else {
+        authStep.classList.remove("hidden");
+        configStep.classList.add("hidden");
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(message) {
+      const toast = document.getElementById("toastMsg");
+      toast.textContent = message;
+      toast.classList.remove("hidden");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
